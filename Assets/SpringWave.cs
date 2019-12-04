@@ -15,8 +15,8 @@ public class SpringWave : IWave
 
     float yChange = 0;
     float phase = 0;
-    float decay = 0.6f;
-    float speed = 3;
+    float decayRate = 1.5f;
+    float speed = 2;
 
     public SpringWave(int x, int y)
     {
@@ -72,7 +72,7 @@ public class SpringWave : IWave
             return yChange;
         }
         float dist = Vector2.Distance(new Vector2(x, y), new Vector2(centerX, centerY));
-        return (1 / ((dist * dist) + 1)) * yChange;
+        return (1 / ((dist * dist) + 1)) * yChange ;
     }
 
     float WeightAfterReleasing(int x, int y)
@@ -82,9 +82,9 @@ public class SpringWave : IWave
         {
             return 0;
         }
-        float distDecay = (1 / Mathf.Log(dist + 3));
-        float timeDecay = (1 / (phase + 1)) * decay;
-        return Mathf.Cos(-phase * speed + dist) * yChange * timeDecay;
+        float decayVal = Mathf.Max((phase * phase * decayRate), 1);
+        float decay = Mathf.Min((dist*6 + 1) / (decayVal),1);
+        return Mathf.Sin(phase * speed - dist) * yChange * decay * 0.2f;
     }
 
     public float WeightAtPoint(int x, int y)
