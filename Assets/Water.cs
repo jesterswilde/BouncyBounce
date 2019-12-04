@@ -17,13 +17,13 @@ public class Water : MonoBehaviour
     void Start()
     {
         CreateWaterGrid();
-        CreateSinWave(1, 1, 0);
-        CreateSinWave(0.5f, 1f, -0.2f);
+        CreateSinWave(1, 0.5f, 0f);
+        // CreateSinWave(0.5f, 0.2f, -0.5f);
     }
 
     void CreateWaterGrid()
     {
-        waterTrans = new Transform[width, height];
+        waterTrans = new Transform[height, width];
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
@@ -31,6 +31,10 @@ public class Water : MonoBehaviour
                 Transform trans = Instantiate(waterPrefab);
                 trans.position = new Vector3(x * gridSize, 0, y * gridSize);
                 waterTrans[y, x] = trans;
+                if (x == 0)
+                {
+                    trans.gameObject.AddComponent<WaveFront>();
+                }
             }
         }
     }
@@ -43,19 +47,30 @@ public class Water : MonoBehaviour
     {
         waves.ForEach(wave => wave.TimePass(Time.deltaTime));
     }
-    void CreateSpringWave(){
-        RaycastHit hit; 
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
-        int x, y; 
-        if(Physics.Raycast(ray, out hit ,100)){
-            Transform trans = hit.collider.transform; 
-            x = Mathf.FloorToInt(trans.position.x / gridSize); 
-            y = Mathf.FloorToInt(trans.position.z / gridSize); 
-        }else{
-            return; 
+    void OnDrawGizmos()
+    {
+        float centerX = (width / 2f) * gridSize;
+        float centerZ = (height / 2f) * gridSize;
+        Gizmos.color = Color.yellow;
+        Gizmos.DrawWireCube(new Vector3(centerX - gridSize / 2 ,0, centerZ - gridSize / 2), new Vector3(width, gridSize * 2, height));
+    }
+    void CreateSpringWave()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        int x, y;
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            Transform trans = hit.collider.transform;
+            x = Mathf.FloorToInt(trans.position.x / gridSize);
+            y = Mathf.FloorToInt(trans.position.z / gridSize);
         }
-        var wave = new SpringWave(x,y); 
-        waves.Add(wave); 
+        else
+        {
+            return;
+        }
+        var wave = new SpringWave(x, y);
+        waves.Add(wave);
     }
     void UpdateWater()
     {
@@ -75,7 +90,8 @@ public class Water : MonoBehaviour
     {
         UpdateWaves();
         UpdateWater();
-        if(Input.GetMouseButtonDown(0)){
+        if (Input.GetMouseButtonDown(0))
+        {
             CreateSpringWave();
         }
     }
