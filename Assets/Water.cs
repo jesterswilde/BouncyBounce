@@ -12,13 +12,24 @@ public class Water : MonoBehaviour
     public float gridSize = 1;
     Transform[,] waterTrans;
     List<IWave> waves = new List<IWave>();
+    List<IWave> toRemove = new List<IWave>(); 
 
     // Start is called before the first frame update
     void Start()
     {
         CreateWaterGrid();
-        CreateSinWave(1, 0.5f, 0f);
+        // CreateSinWave(1, 0.5f, 0f);
         // CreateSinWave(0.5f, 0.2f, -0.5f);
+    }
+
+    void RemoveWave(IWave wave){
+        toRemove.Add(wave); 
+    }
+    void RemoveDeadWaves(){
+        if(toRemove.Count > 0){
+            toRemove.ForEach(wave => waves.Remove(wave));
+            toRemove.Clear();
+        }
     }
 
     void CreateWaterGrid()
@@ -70,6 +81,7 @@ public class Water : MonoBehaviour
             return;
         }
         var wave = new SpringWave(x, y);
+        wave.SetRemoveFunc(RemoveWave); 
         waves.Add(wave);
     }
     void UpdateWater()
@@ -90,6 +102,7 @@ public class Water : MonoBehaviour
     {
         UpdateWaves();
         UpdateWater();
+        RemoveDeadWaves();
         if (Input.GetMouseButtonDown(0))
         {
             CreateSpringWave();
