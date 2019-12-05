@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: 412f9092526e5474f94540f40e298a9f
+guid: 4319a14c36a8ccf44a5fcf418c4111fa
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: tug_boat_mtl
-    second: {fileID: 2100000, guid: 7c394fba780641f419caa8731a03aec9, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
