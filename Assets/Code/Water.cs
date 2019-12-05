@@ -25,6 +25,7 @@ public class Water : MonoBehaviour
     float[,] waterHeights;
     List<IWave> waves = new List<IWave>();
     List<IWave> toRemove = new List<IWave>(); 
+    List<RadialWave> radialWavesToRemove = new List<RadialWave>(); 
     List<ArcadeWave> arcadeWaves = new List<ArcadeWave>(); 
     HashSet<Vector2> toReset = new HashSet<Vector2>(); 
     [SerializeField]
@@ -38,8 +39,10 @@ public class Water : MonoBehaviour
         // CreateSinWave(3, 0.5f, 0f);
         // CreateSinWave(1f, 0.2f, -0.5f);
     }
-
-    void RemoveWave(IWave wave){
+    public void AddWave(IWave wave){
+        waves.Add(wave); 
+    }
+    public void RemoveWave(IWave wave){
         toRemove.Add(wave); 
     }
     void RemoveDeadWaves(){
@@ -65,7 +68,7 @@ public class Water : MonoBehaviour
         var wave = new SinWave(freq, amp, angle);
         waves.Add(wave);
     }
-    void UpdateWaves()
+    void TimePasses()
     {
         waves.ForEach(wave => wave.TimePass(Time.deltaTime));
     }
@@ -113,17 +116,30 @@ public class Water : MonoBehaviour
         var wave = new ArcadeWave(x, y, width, height, this);
         arcadeWaves.Add(wave);
     }
-    void UpdateWater()
+    void CalculateWaterHeight()
     {
         for (int x = 0; x < width; x++)
         {
             for (int y = 0; y < height; y++)
             {
                 float yPos = 0;
-                waves.ForEach(wave => yPos += wave.WeightAtPoint(x, y));
+                waves.ForEach(wave => yPos += wave.WeightAtPoint(x, y, 0));
                 waterHeights[y,x] = yPos;
             }
         }
+    }
+    public float GetHeightAtPoint(int x, int y){
+        if(x < 0 || y < 0 || x >= width || y >= height){
+            return 0; 
+        }
+        return waterHeights[y,x]; 
+    }
+    public float GetVelocityOfPoint(int x, int y){
+        float curY = 0;
+        float prevY = 0;
+        waves.ForEach(wave => curY += wave.WeightAtPoint(x, y, 0));
+        waves.ForEach(wave => prevY += wave.WeightAtPoint(x, y, 0.05f));
+        return curY - prevY; 
     }
     void UpdateArcadeWave(){
         arcadeWaves.ForEach(wave => wave.UpdateWave()); 
@@ -166,18 +182,18 @@ public class Water : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        UpdateWaves();
-        UpdateWater();
+        TimePasses();
+        CalculateWaterHeight();
         // ResetWaves();
-        UpdateArcadeWave();
+        // UpdateArcadeWave();
         RemoveDeadWaves();
         DrawWater(); 
-        if (Input.GetMouseButtonDown(0))
-        {
-            CreateArcadeWave();
-        }
-        if(Input.GetMouseButtonDown(1)){
-            CreateSpringWave();
-        }
+        // if (Input.GetMouseButtonDown(0))
+        // {
+        //     CreateArcadeWave();
+        // }
+        // if(Input.GetMouseButtonDown(1)){
+        //     CreateSpringWave();
+        // }
     }
 }

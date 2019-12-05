@@ -995,7 +995,7 @@ PrefabInstance:
     - target: {fileID: 181285456971568166, guid: 34c2dc46a0d6d2a49ba72c575a47c07a,
         type: 3}
       propertyPath: acceleration
-      value: 40
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 181285456971568166, guid: 34c2dc46a0d6d2a49ba72c575a47c07a,
         type: 3}

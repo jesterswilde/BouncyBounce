@@ -4,6 +4,6 @@ using UnityEngine;
 
 public interface IWave
 {
-    float WeightAtPoint(int x, int y);
+    float WeightAtPoint(int x, int y, float timeDif);
     void TimePass(float time);
 }

@@ -21,9 +21,9 @@ public class SinWave: IWave
         phase += time; 
     }
 
-    public float WeightAtPoint(int x, int y)
+    public float WeightAtPoint(int x, int y, float timeDif = 0)
     {
         float pos = x * 1-angle + y * angle; 
-        return Mathf.Sin((pos + phase) * frequency) * amplitude; 
+        return Mathf.Sin((pos + phase - timeDif) * frequency) * amplitude; 
     }
 }

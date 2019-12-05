@@ -95,4 +95,9 @@ public class SpringWave : IWave
         }
         return WeightWhileHolding(x, y);
     }
+
+    public float WeightAtPoint(int x, int y, float timeDif)
+    {
+        throw new NotImplementedException();
+    }
 }
