@@ -934,6 +934,10 @@ MonoBehaviour:
   width: 120
   height: 120
   gridSize: 1
+  baseWaves:
+  - Amplitude: 1
+    Frequency: 1
+    Direction: 0
 --- !u!4 &2136273061
 Transform:
   m_ObjectHideFlags: 0

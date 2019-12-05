@@ -156,7 +156,7 @@ public class Water : MonoBehaviour
             for(int y = 0; y < height; y++){
                 float waterHeight = waterHeights[y,x];
                 Matrix4x4 mat = new Matrix4x4();
-                mat.SetTRS(new Vector3(x * gridSize, waterHeight, y * gridSize), Quaternion.identity, Vector3.one);
+                mat.SetTRS(new Vector3(x * gridSize, waterHeight, y * gridSize), Quaternion.identity, new Vector3(gridSize, gridSize, gridSize));
                 // Debug.Log(x + " | " + y + " | " + (x%8) + " | " + height + " | " + ((x%8* curWidth) + y));
                 matrices[(x%8)* height+ y] = mat; 
             }
