@@ -31,6 +31,17 @@ public class Water : MonoBehaviour
     HashSet<Vector2> toReset = new HashSet<Vector2>(); 
     [SerializeField]
     List<WaveParams> baseWaves;
+    Dictionary<Vector2, bool> dryLand = new Dictionary<Vector2, bool>(); 
+
+    public void RegisterDryLand(Vector2 land){
+        dryLand[land * (gridSize + spacing)] = true; 
+    }
+    public bool IsWater(Vector2 point){
+        if(dryLand.ContainsKey(point * (gridSize + spacing))){
+            return !dryLand[point * (gridSize + spacing)]; 
+        }
+        return true; 
+    }
 
     // Start is called before the first frame update
     void Start()
@@ -123,6 +134,9 @@ public class Water : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
+                if(!IsWater(new Vector2(x,y))){
+                    continue; 
+                }
                 float yPos = 0;
                 waves.ForEach(wave => yPos += wave.WeightAtPoint(x, y, 0));
                 waterHeights[y,x] = yPos;
@@ -171,6 +185,9 @@ public class Water : MonoBehaviour
                 matrices = new Matrix4x4[curWidth * height];
             }
             for(int y = 0; y < height; y++){
+                if(!IsWater(new Vector2(x,y))){
+                    continue; 
+                }
                 float waterHeight = waterHeights[y,x];
                 Matrix4x4 mat = new Matrix4x4();
                 mat.SetTRS(new Vector3(x * (gridSize + spacing), waterHeight, y * (gridSize+spacing)), Quaternion.identity, new Vector3(gridSize, gridSize, gridSize));
