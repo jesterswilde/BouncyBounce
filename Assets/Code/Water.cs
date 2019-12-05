@@ -2,7 +2,15 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using System;
 
+[Serializable]
+public struct WaveParams{
+    public float Amplitude; 
+    public float Frequency; 
+    public float Direction; 
+
+}
 public class Water : MonoBehaviour
 {
 
@@ -19,13 +27,16 @@ public class Water : MonoBehaviour
     List<IWave> toRemove = new List<IWave>(); 
     List<ArcadeWave> arcadeWaves = new List<ArcadeWave>(); 
     HashSet<Vector2> toReset = new HashSet<Vector2>(); 
+    [SerializeField]
+    List<WaveParams> baseWaves;
 
     // Start is called before the first frame update
     void Start()
     {
         CreateWaterGrid();
-        CreateSinWave(3, 0.5f, 0f);
-        CreateSinWave(1f, 0.2f, -0.5f);
+        baseWaves.ForEach(param => CreateSinWave(param.Amplitude, param.Frequency, param.Direction));
+        // CreateSinWave(3, 0.5f, 0f);
+        // CreateSinWave(1f, 0.2f, -0.5f);
     }
 
     void RemoveWave(IWave wave){
