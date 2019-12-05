@@ -46,7 +46,6 @@ public class ArcadeWave
                 }else if(y < centerY){
                     yMod = 1 - (yDist / leadingLen);
                 }
-                Debug.Log(x + " | " + y + " | " + height * yMod * xMod); 
                 water.AddToWaterHeight(x, y, height * yMod * xMod);
             }
         }

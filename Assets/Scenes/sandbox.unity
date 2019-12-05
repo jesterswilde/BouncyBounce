@@ -929,10 +929,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83362dfcc195d46fb906a9e40315e7ee, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterPrefab: {fileID: 1411883209753760650, guid: a226b0f71186843289080cc9edc5bd2e,
-    type: 3}
-  width: 100
-  height: 100
+  waterMesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+  waterMat: {fileID: 2100000, guid: 870f533e6d3ba4acda06315fae29e135, type: 2}
+  width: 120
+  height: 120
   gridSize: 1
 --- !u!4 &2136273061
 Transform:
