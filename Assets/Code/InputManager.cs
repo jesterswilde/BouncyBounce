@@ -22,6 +22,7 @@ public class InputManager : MonoBehaviour
             targetThumper = go.GetComponent<Thumper>(); 
             if(targetThumper == null){
                 clickPos = new Vector2(hit.point.x, hit.point.z); 
+                // clickPos = new Vector2(hit.point.x / (GameManager.Water.gridSize + GameManager.Water.spacing), hit.point.z / (GameManager.Water.gridSize + GameManager.Water.spacing)); 
                 // Debug.Log("Click Pos:  " + hit.point); 
             }
         }

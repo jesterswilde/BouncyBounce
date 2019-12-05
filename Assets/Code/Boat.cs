@@ -10,10 +10,15 @@ public class Boat : MonoBehaviour
     float acceleration = 2; 
     [SerializeField]
     float buoyancy = 5; 
+    [SerializeField]
+    float boatSize = 2; 
+    [SerializeField]
+    float lerpSpeed = 0.5f; 
     Vector3 forwardDir = Vector3.forward;
     public Vector3 Foward {get{return forwardDir;}}
     // Start is called before the first frame update
     Rigidbody rigid;
+    List<Draggable> dragging = new List<Draggable>(); 
     void Start()
     {
         rigid = GetComponent<Rigidbody>(); 
@@ -23,6 +28,18 @@ public class Boat : MonoBehaviour
     void FixedUpdate()
     {
         Move();
+        DragThings(); 
+    }
+
+    void Update(){
+        HandleRelease();
+        LookForward();  
+    }
+
+    void LookForward(){
+        Vector3 tempVel = new Vector3(rigid.velocity.x, rigid.velocity.y * 0.5f, rigid.velocity.z); 
+        Vector3 look = Vector3.Lerp(transform.forward, tempVel, lerpSpeed * Time.deltaTime);
+        transform.forward = look; 
     }
 
     void Move(){
@@ -30,9 +47,9 @@ public class Boat : MonoBehaviour
         float z = Input.GetAxisRaw("Vertical");
         forwardDir = new Vector3(x,0,z); 
         float y = 0;
-        float posAtPoint = GameManager.Water.GetHeightAtPoint((int)transform.position.x, (int)transform.position.z);
-        float forwardY =  GameManager.Water.GetHeightAtPoint((int)transform.position.x+1, (int)transform.position.z);
-        float rightY =  GameManager.Water.GetHeightAtPoint((int)transform.position.x, (int)transform.position.z+1);
+        float posAtPoint = GameManager.Water.getHeightAtPointScaled((int)transform.position.x, (int)transform.position.z);
+        float forwardY =  GameManager.Water.getHeightAtPointScaled((int)transform.position.x+1, (int)transform.position.z);
+        float rightY =  GameManager.Water.getHeightAtPointScaled((int)transform.position.x, (int)transform.position.z+1);
         Vector3 waveNorm = new Vector3(forwardY - posAtPoint, 0, rightY - posAtPoint); 
         float yDif = transform.position.y - posAtPoint; 
         Vector3 dir = new Vector3(x, 0, z).normalized * acceleration * Time.deltaTime;
@@ -54,4 +71,31 @@ public class Boat : MonoBehaviour
         dir.y = y; 
         rigid.AddForce(dir, ForceMode.Acceleration);
     }
+
+    void HandleRelease(){
+        if(Input.GetKeyDown(KeyCode.Tab)){
+            dragging.ForEach(thing => thing.GotReleased());
+            dragging.Clear(); 
+        }
+    }
+
+    void DragThings(){
+        float backDist = boatSize;
+        Vector3 back = transform.forward * -1;  
+        for(int i = 0; i < dragging.Count; i++){
+            var thing = dragging[i]; 
+            thing.SetPosAndDir(transform.position + backDist * back, transform.forward); 
+            backDist += thing.Size; 
+        }
+    }
+
+    void OnCollisionEnter(Collision collision){
+        var thingToDrag = collision.gameObject.GetComponent<Draggable>(); 
+        if(thingToDrag != null){
+            thingToDrag.GotGrabbed(); 
+            dragging.Add(thingToDrag); 
+        }
+    }
+
+
 }

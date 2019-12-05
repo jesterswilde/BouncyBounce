@@ -31,14 +31,22 @@ public class Water : MonoBehaviour
     HashSet<Vector2> toReset = new HashSet<Vector2>(); 
     [SerializeField]
     List<WaveParams> baseWaves;
+    public float GridSize {get{return gridSize;}}
+    public float Spacing {get{return spacing;}}
     Dictionary<Vector2, bool> dryLand = new Dictionary<Vector2, bool>(); 
 
     public void RegisterDryLand(Vector2 land){
-        dryLand[land * (gridSize + spacing)] = true; 
+        dryLand[land / (gridSize + spacing)] = true; 
     }
-    public bool IsWater(Vector2 point){
-        if(dryLand.ContainsKey(point * (gridSize + spacing))){
-            return !dryLand[point * (gridSize + spacing)]; 
+    public bool isWater(Vector2 point){
+        if(dryLand.ContainsKey(point)){
+            return !dryLand[point]; 
+        }
+        return true; 
+    }
+    public bool IsWaterScaled(Vector2 point){
+        if(dryLand.ContainsKey(point / (gridSize + spacing))){
+            return !dryLand[point / (gridSize + spacing)]; 
         }
         return true; 
     }
@@ -134,7 +142,7 @@ public class Water : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if(!IsWater(new Vector2(x,y))){
+                if(!isWater(new Vector2(x,y))){
                     continue; 
                 }
                 float yPos = 0;
@@ -143,13 +151,23 @@ public class Water : MonoBehaviour
             }
         }
     }
+    public float getHeightAtPointScaled(int x, int y){
+        if(x < 0 || y < 0 || x >= width || y >= height){
+            return 0; 
+        }
+        return waterHeights[y,x]; 
+    }
     public float GetHeightAtPoint(int x, int y){
+        x = (int)(x / (gridSize + spacing)); 
+        y = (int)(y / (gridSize + spacing)); 
         if(x < 0 || y < 0 || x >= width || y >= height){
             return 0; 
         }
         return waterHeights[y,x]; 
     }
     public float GetVelocityOfPoint(int x, int y){
+        x = (int)(x / (gridSize + spacing)); 
+        y = (int)(y / (gridSize + spacing)); 
         float curY = 0;
         float prevY = 0;
         waves.ForEach(wave => curY += wave.WeightAtPoint(x, y, 0));
@@ -185,7 +203,7 @@ public class Water : MonoBehaviour
                 matrices = new Matrix4x4[curWidth * height];
             }
             for(int y = 0; y < height; y++){
-                if(!IsWater(new Vector2(x,y))){
+                if(!isWater(new Vector2(x,y))){
                     continue; 
                 }
                 float waterHeight = waterHeights[y,x];

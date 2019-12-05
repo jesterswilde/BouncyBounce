@@ -53,7 +53,7 @@ public class Thumper : MonoBehaviour
     }
 
     void MakeWave(float phaseDif = 0){
-        Vector2 center = new Vector2(transform.position.x, transform.position.z); 
+        Vector2 center = new Vector2(transform.position.x / (GameManager.Water.gridSize + GameManager.Water.spacing), transform.position.z /( GameManager.Water.gridSize + GameManager.Water.spacing)); 
         RadialWave wave = new RadialWave(center, (size/2) * (size/2), speed * 2 + 8, phaseDif);
         GameManager.Water.AddWave(wave); 
     }
