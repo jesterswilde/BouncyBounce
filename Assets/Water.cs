@@ -13,13 +13,15 @@ public class Water : MonoBehaviour
     Transform[,] waterTrans;
     List<IWave> waves = new List<IWave>();
     List<IWave> toRemove = new List<IWave>(); 
+    List<ArcadeWave> arcadeWaves = new List<ArcadeWave>(); 
+    HashSet<Vector2> toReset = new HashSet<Vector2>(); 
 
     // Start is called before the first frame update
     void Start()
     {
         CreateWaterGrid();
-        // CreateSinWave(1, 0.5f, 0f);
-        // CreateSinWave(0.5f, 0.2f, -0.5f);
+        CreateSinWave(3, 0.5f, 0f);
+        CreateSinWave(1f, 0.2f, -0.5f);
     }
 
     void RemoveWave(IWave wave){
@@ -54,10 +56,10 @@ public class Water : MonoBehaviour
         var wave = new SinWave(freq, amp, angle);
         waves.Add(wave);
     }
-    void UpdateWaves()
-    {
-        waves.ForEach(wave => wave.TimePass(Time.deltaTime));
-    }
+    // void UpdateWaves()
+    // {
+    //     waves.ForEach(wave => wave.TimePass(Time.deltaTime));
+    // }
     void OnDrawGizmos()
     {
         float centerX = (width / 2f) * gridSize;
@@ -84,6 +86,24 @@ public class Water : MonoBehaviour
         wave.SetRemoveFunc(RemoveWave); 
         waves.Add(wave);
     }
+    void CreateArcadeWave()
+    {
+        RaycastHit hit;
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        int x, y;
+        if (Physics.Raycast(ray, out hit, 100))
+        {
+            Transform trans = hit.collider.transform;
+            x = Mathf.FloorToInt(trans.position.x / gridSize);
+            y = Mathf.FloorToInt(trans.position.z / gridSize);
+        }
+        else
+        {
+            return;
+        }
+        var wave = new ArcadeWave(x, y, width, height, this);
+        arcadeWaves.Add(wave);
+    }
     void UpdateWater()
     {
         for (int x = 0; x < width; x++)
@@ -97,15 +117,38 @@ public class Water : MonoBehaviour
             }
         }
     }
+    void UpdateArcadeWave(){
+        arcadeWaves.ForEach(wave => wave.UpdateWave()); 
+    }
+    public void AddToWaterHeight(int x, int y, float posMod){
+        if(x < 0 || x >= width || y < 0 || y >= height){
+            return; 
+        }
+        toReset.Add( new Vector2(x,y)); 
+        var trans = waterTrans[y,x].position; 
+        waterTrans[y,x].position = new Vector3(trans.x, posMod + trans.y, trans.z);  
+    }
+    void ResetWaves(){
+        for(int i = 0; i < toReset.Count; i++){
+            var val = toReset.ElementAt(i);
+            var x = (int) val.x; 
+            var y = (int) val.y; 
+            var pos = waterTrans[y,x].position;
+            waterTrans[y, x].position = new Vector3(pos.x, 0, pos.z); 
+        }
+        toReset.Clear(); 
+    }
     // Update is called once per frame
     void Update()
     {
-        UpdateWaves();
-        UpdateWater();
-        RemoveDeadWaves();
+        // UpdateWaves();
+        // UpdateWater();
+        ResetWaves();
+        UpdateArcadeWave();
+        // RemoveDeadWaves();
         if (Input.GetMouseButtonDown(0))
         {
-            CreateSpringWave();
+            CreateArcadeWave();
         }
     }
 }
