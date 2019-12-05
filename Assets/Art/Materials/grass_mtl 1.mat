@@ -7,7 +7,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: tug_boat_mtl
+  m_Name: grass_mtl 1
   m_Shader: {fileID: 4800000, guid: 282297c7a3d36fd4281e2b50cfd16e0e, type: 3}
   m_ShaderKeywords: 
   m_LightmapFlags: 4
@@ -40,7 +40,7 @@ Material:
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MainTex:
-        m_Texture: {fileID: 2800000, guid: f7df3ae849b7c7a439155fe6f4860f90, type: 3}
+        m_Texture: {fileID: 2800000, guid: 0bbc4574ffe215a4ea664a313f51762c, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _MetallicGlossMap:
@@ -61,22 +61,22 @@ Material:
     - _DetailNormalMapScale: 1
     - _DstBlend: 0
     - _GlossMapScale: 1
-    - _Glossiness: 0
+    - _Glossiness: 2.86
     - _GlossyReflections: 1
     - _Metallic: 0
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
-    - _RimAmount: 0.267
-    - _RimThreshold: 0.158
+    - _RimAmount: 1
+    - _RimThreshold: 1
     - _SmoothnessTextureChannel: 0
     - _SpecularHighlights: 1
     - _SrcBlend: 1
     - _UVSec: 0
     - _ZWrite: 1
     m_Colors:
-    - _AmbientColor: {r: 0.5377358, g: 0.5377358, b: 0.5377358, a: 1}
-    - _Color: {r: 0.4198113, g: 0.6742235, b: 1, a: 1}
+    - _AmbientColor: {r: 0.08989733, g: 0.3018868, b: 0.064079754, a: 1}
+    - _Color: {r: 0.29966182, g: 0.6981132, b: 0.341498, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
-    - _RimColor: {r: 0.6556604, g: 0.89253294, b: 1, a: 1}
-    - _SpecularColor: {r: 0.3679245, g: 0.3679245, b: 0.3679245, a: 1}
+    - _RimColor: {r: 1, g: 1, b: 1, a: 1}
+    - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}
