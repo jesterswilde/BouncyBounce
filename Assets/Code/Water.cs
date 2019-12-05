@@ -22,6 +22,7 @@ public class Water : MonoBehaviour
     public int width = 10;
     public int height = 10;
     public float gridSize = 1;
+    public float spacing = 0; 
     float[,] waterHeights;
     List<IWave> waves = new List<IWave>();
     List<IWave> toRemove = new List<IWave>(); 
@@ -74,8 +75,8 @@ public class Water : MonoBehaviour
     }
     void OnDrawGizmos()
     {
-        float centerX = (width / 2f) * gridSize;
-        float centerZ = (height / 2f) * gridSize;
+        float centerX = (width / 2f) * (gridSize+ spacing);
+        float centerZ = (height / 2f) * (gridSize+ spacing);
         Gizmos.color = Color.yellow;
         Gizmos.DrawWireCube(new Vector3(centerX - gridSize / 2 ,0, centerZ - gridSize / 2), new Vector3(width, gridSize * 2, height));
     }
@@ -107,7 +108,7 @@ public class Water : MonoBehaviour
         {
             x = Mathf.FloorToInt(hit.point.x / gridSize);
             y = Mathf.FloorToInt(hit.point.z / gridSize);
-            Debug.Log(x + " | " + y); 
+            // Debug.Log(x + " | " + y); 
         }
         else
         {
@@ -172,7 +173,7 @@ public class Water : MonoBehaviour
             for(int y = 0; y < height; y++){
                 float waterHeight = waterHeights[y,x];
                 Matrix4x4 mat = new Matrix4x4();
-                mat.SetTRS(new Vector3(x * gridSize, waterHeight, y * gridSize), Quaternion.identity, new Vector3(gridSize, gridSize, gridSize));
+                mat.SetTRS(new Vector3(x * (gridSize + spacing), waterHeight, y * (gridSize+spacing)), Quaternion.identity, new Vector3(gridSize, gridSize, gridSize));
                 // Debug.Log(x + " | " + y + " | " + (x%8) + " | " + height + " | " + ((x%8* curWidth) + y));
                 matrices[(x%8)* height+ y] = mat; 
             }

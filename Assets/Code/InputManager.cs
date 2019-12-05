@@ -17,7 +17,7 @@ public class InputManager : MonoBehaviour
     void CheckUnderClick(){
         RaycastHit hit; 
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition); 
-        if(Physics.Raycast(ray, out hit, 100, layerMask)){
+        if(Physics.Raycast(ray, out hit, 10000, layerMask)){
             var go = hit.collider.gameObject; 
             targetThumper = go.GetComponent<Thumper>(); 
             if(targetThumper == null){
