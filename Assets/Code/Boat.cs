@@ -121,7 +121,8 @@ public class Boat : MonoBehaviour
         float yUp = GameManager.Water.GetVelocityOfPoint((int)transform.position.x, (int)transform.position.z);
         float yDif = transform.position.y - posAtPoint; 
         Vector3 dir = new Vector3(x, 0, z).normalized * acceleration * Time.deltaTime;
-        if(dir == Vector3.zero && Input.GetKey(KeyCode.Space)){
+        if(Input.GetKey(KeyCode.Space)){
+            dir = Vector3.zero; 
             dir.x = rigid.velocity.x; 
             dir.z = rigid.velocity.z;
             dir = dir.normalized; 
