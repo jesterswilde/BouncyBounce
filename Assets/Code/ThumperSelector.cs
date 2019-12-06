@@ -24,6 +24,7 @@ public class ThumperSelector : MonoBehaviour
 
     void UpdateSelectedThumper(){
         Thumper oldThumper = selectedThumper; 
+        thumpers = thumpers.Where(thumper => thumper != null).ToList(); 
         if(thumpers.Count == 0){
             if(selectedThumper != null){
                 selectedThumper.Deselect(); 
