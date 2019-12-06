@@ -5,6 +5,10 @@ using UnityEngine;
 public class Thumper : MonoBehaviour
 {
     [SerializeField]
+    Color selectedColor; 
+    Color baseColor; 
+    Renderer rend;
+    [SerializeField]
     float speed = 3; 
     float dir; 
     [SerializeField]
@@ -20,10 +24,7 @@ public class Thumper : MonoBehaviour
         float modForce = Mathf.Log(Mathf.Abs(force)); 
         return Mathf.Clamp(modForce * dir, -10, 10);
     }
-    public void AddMomentum(float intensity){
-        float force = ClampForce(intensity); 
-        float dirMod = force * dir >= 0 ? 1 : -1; 
-        force = Mathf.Abs(force);
+    public void AddMomentum(float force){
         if(size + force < 0){
             GameManager.AddThumperToStorage(); 
             Destroy(gameObject); 
@@ -31,8 +32,7 @@ public class Thumper : MonoBehaviour
         size += force; 
         speed += force * 0.1f; 
     }
-    public void SetVel(float force){
-        float intensity = ClampForce(force); 
+    public void SetVel(float intensity){
         dir = intensity >= 0 ? 1 : -1; 
         speed = speed + intensity * 0.1f; 
         size = intensity; 
@@ -58,8 +58,23 @@ public class Thumper : MonoBehaviour
         GameManager.Water.AddWave(wave); 
     }
 
+    public void Select(){
+        if(rend !=  null){
+            rend.material.color = selectedColor; 
+        }
+    }
+
+    public void Deselect(){
+        rend.material.color = baseColor; 
+    }
+
     void Update(){
         phase += Time.deltaTime;
         Move(); 
+    }
+
+    void Awake(){
+        rend = GetComponent<Renderer>();
+        baseColor = rend.material.color; 
     }
 }
