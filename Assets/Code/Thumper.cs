@@ -18,6 +18,7 @@ public class Thumper : MonoBehaviour
     bool isDragging = false; 
     float draggingStartedTime; 
     float draggingStartedPos; 
+    public bool WillBeDeleted {get{return size < 0;}}
 
     float ClampForce(float force){
         float dir = force > 0 ? 1 :  -1; 

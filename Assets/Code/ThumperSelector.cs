@@ -74,6 +74,9 @@ public class ThumperSelector : MonoBehaviour
             return;
         }
         selectedThumper.AddMomentum(Settings.ThumpModForce * -1);
+        if(selectedThumper.WillBeDeleted){
+            thumpers.Remove(selectedThumper); 
+        }
     }
 
     // Update is called once per frame
