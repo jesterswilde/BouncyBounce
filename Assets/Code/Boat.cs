@@ -13,15 +13,27 @@ public class Boat : MonoBehaviour
     [SerializeField]
     float boatSize = 2; 
     [SerializeField]
+    float maxPitch = 10f; 
+    [SerializeField]
+    float pitchAcceleration = 1f; 
+    
+    [SerializeField]
+
     float lerpSpeed = 0.5f; 
     Vector3 forwardDir = Vector3.forward;
     public Vector3 Foward {get{return forwardDir;}}
     // Start is called before the first frame update
     Rigidbody rigid;
+    AudioSource sound; 
     List<Draggable> dragging = new List<Draggable>(); 
     void Start()
     {
+        sound = GetComponentInChildren<AudioSource>();
         rigid = GetComponent<Rigidbody>(); 
+        if(sound != null){
+            sound.loop = true; 
+            sound.Play(); 
+        }
     }
 
     // Update is called once per frame
@@ -33,7 +45,19 @@ public class Boat : MonoBehaviour
 
     void Update(){
         HandleRelease();
-        LookForward();  
+        LookForward();
+        HandlePitch();  
+    }
+
+    void HandlePitch(){
+        if(sound == null){
+            return; 
+        }
+        if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0){
+            sound.pitch = Mathf.Min(maxPitch, sound.pitch + pitchAcceleration * Time.deltaTime);
+        }else{
+            sound.pitch = Mathf.Max(1, sound.pitch - pitchAcceleration); 
+        }
     }
 
     void LookForward(){
@@ -91,7 +115,7 @@ public class Boat : MonoBehaviour
 
     void OnCollisionEnter(Collision collision){
         var thingToDrag = collision.gameObject.GetComponent<Draggable>(); 
-        if(thingToDrag != null){
+        if(thingToDrag != null && thingToDrag.CanBeGrabbed){
             thingToDrag.GotGrabbed(); 
             dragging.Add(thingToDrag); 
         }

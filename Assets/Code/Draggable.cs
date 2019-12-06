@@ -5,6 +5,9 @@ using UnityEngine;
 public class Draggable : MonoBehaviour
 {
     [SerializeField]
+    GameObject onPlaceEffect;
+    AudioSource source; 
+    [SerializeField]
     bool isDraggable = false; 
     [SerializeField]
     bool movedByWater = false;
@@ -19,29 +22,40 @@ public class Draggable : MonoBehaviour
     [SerializeField]
     int bargeValue = 1; 
     float size; 
+    bool isPlaced = false; 
     public float Size {get{return size;}}
     Collider coll; 
     Rigidbody rigid;
     bool isGrabbed = false; 
-
-    public void GotGrabbed(){
-        Debug.Log("Got grabbed"); 
+    public bool IsGrabbed {get{return isGrabbed;}}
+    public bool CanBeGrabbed{get{return !isGrabbed && !isPlaced;}}
+    public void GotGrabbed(){ 
         rigid.isKinematic = true;
         isGrabbed = true;  
+    }
+    public void GotPlaced(){
+        rigid.isKinematic = true; 
+        isPlaced = true; 
+        if(onPlaceEffect != null){
+            Instantiate(onPlaceEffect, transform.position, Quaternion.identity); 
+        }
+        if(source != null){
+            source.Play(); 
+        }
     }
     public void GotReleased(){
         rigid.isKinematic = false;
         isGrabbed = false;  
     }
-
     void Awake(){
         coll = GetComponent<Collider>(); 
         size = coll.bounds.extents.z * 2;
-        rigid = GetComponent<Rigidbody>(); 
+        rigid = GetComponent<Rigidbody>();
+        source = GetComponent<AudioSource>(); 
     }
 
     public void SetPosAndDir(Vector3 pos, Vector3 forward){
-        if(isGrabbed && isDraggable){
+        if(isGrabbed && isDraggable && !isPlaced){
             transform.position = pos; 
             transform.forward = forward; 
         }
