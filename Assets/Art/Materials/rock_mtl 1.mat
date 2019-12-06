@@ -63,7 +63,9 @@ Material:
     - _GlossMapScale: 1
     - _Glossiness: 0
     - _GlossyReflections: 1
+    - _MaxColorHeight: 7.4
     - _Metallic: 0
+    - _MinColorHeight: 1.69
     - _Mode: 0
     - _OcclusionStrength: 1
     - _Parallax: 0.02
@@ -78,5 +80,6 @@ Material:
     - _AmbientColor: {r: 0.5849056, g: 0.58214664, b: 0.58214664, a: 1}
     - _Color: {r: 0.47036314, g: 0.56594986, b: 0.6603774, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 0}
+    - _HeightColor: {r: 0.47058827, g: 0.5647059, b: 0.65882355, a: 1}
     - _RimColor: {r: 1, g: 1, b: 1, a: 1}
     - _SpecularColor: {r: 0, g: 0, b: 0, a: 1}
