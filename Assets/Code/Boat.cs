@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class Boat : MonoBehaviour
 {
@@ -13,15 +14,32 @@ public class Boat : MonoBehaviour
     [SerializeField]
     float boatSize = 2; 
     [SerializeField]
+    float maxPitch = 10f; 
+    List<ParticleSystem> vfxs; 
+    [SerializeField]
+    float pitchAcceleration = 1f; 
+    
+    [SerializeField]
+
     float lerpSpeed = 0.5f; 
     Vector3 forwardDir = Vector3.forward;
     public Vector3 Foward {get{return forwardDir;}}
     // Start is called before the first frame update
     Rigidbody rigid;
+    AudioSource sound; 
+    float emissionVal = 0; 
     List<Draggable> dragging = new List<Draggable>(); 
+    void Awake(){
+        sound = GetComponentInChildren<AudioSource>();
+        rigid = GetComponent<Rigidbody>(); 
+        if(sound != null){
+            sound.loop = true; 
+            sound.Play(); 
+        }
+        vfxs = GetComponentsInChildren<ParticleSystem>().ToList(); 
+    }
     void Start()
     {
-        rigid = GetComponent<Rigidbody>(); 
     }
 
     // Update is called once per frame
@@ -33,7 +51,52 @@ public class Boat : MonoBehaviour
 
     void Update(){
         HandleRelease();
-        LookForward();  
+        LookForward();
+        HandlePitch();  
+        HandleVFX(); 
+    }
+
+    void HandlePitch(){
+        if(sound == null){
+            return; 
+        }
+        if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0){
+            sound.pitch = Mathf.Min(maxPitch, sound.pitch + pitchAcceleration * Time.deltaTime);
+        }else{
+            sound.pitch = Mathf.Max(1, sound.pitch - pitchAcceleration * Time.deltaTime * 2); 
+        }
+    }
+    void HandleVFX(){
+        if(vfxs.Count == 0){
+            return;
+        }
+        float posAtPoint = GameManager.Water.getHeightAtPointScaled((int)transform.position.x, (int)transform.position.z);
+        if(transform.position.y > posAtPoint){
+            vfxs.ForEach(vfx =>{
+                var emission = vfx.emission; 
+                ParticleSystem.MinMaxCurve tempCurve = vfx.emission.rateOverTime;
+                tempCurve.constant = 0;
+                emission.rateOverTime = tempCurve; 
+            });
+            return; 
+        }
+        if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0){
+            emissionVal =  Mathf.Min(100, emissionVal + 20 * Time.deltaTime);
+            vfxs.ForEach(vfx =>{
+                var emission = vfx.emission; 
+                ParticleSystem.MinMaxCurve tempCurve = vfx.emission.rateOverTime;
+                tempCurve.constant = emissionVal;
+                emission.rateOverTime = tempCurve; 
+            });
+        }else{
+            emissionVal = Mathf.Max(0, emissionVal - 40 * Time.deltaTime);
+            vfxs.ForEach(vfx =>{
+                var emission = vfx.emission; 
+                ParticleSystem.MinMaxCurve tempCurve = vfx.emission.rateOverTime;
+                tempCurve.constant = emissionVal;
+                emission.rateOverTime = tempCurve; 
+            });
+        }
     }
 
     void LookForward(){
@@ -91,7 +154,7 @@ public class Boat : MonoBehaviour
 
     void OnCollisionEnter(Collision collision){
         var thingToDrag = collision.gameObject.GetComponent<Draggable>(); 
-        if(thingToDrag != null){
+        if(thingToDrag != null && thingToDrag.CanBeGrabbed){
             thingToDrag.GotGrabbed(); 
             dragging.Add(thingToDrag); 
         }

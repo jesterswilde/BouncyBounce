@@ -553,7 +553,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183132312}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -599,13 +599,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1183132312}
-  m_LocalRotation: {x: 0.040180694, y: 0.0017543277, z: -0.04358411, w: 0.9982399}
-  m_LocalPosition: {x: 0, y: -2, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -4, z: 0}
   m_LocalScale: {x: 200, y: 0.1, z: 200}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 4.61, y: 0, z: -5}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1298115285
 GameObject:
   m_ObjectHideFlags: 0
@@ -727,6 +727,7 @@ GameObject:
   - component: {fileID: 1422761999}
   - component: {fileID: 1422761998}
   - component: {fileID: 1422761997}
+  - component: {fileID: 1422762001}
   m_Layer: 0
   m_Name: Cube
   m_TagString: Untagged
@@ -807,6 +808,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1422762001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1422761996}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 80a624f9018ce2c48a8c4cd47e81ee52, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1628553001
 GameObject:
   m_ObjectHideFlags: 0
@@ -1058,7 +1071,7 @@ MonoBehaviour:
   waterMat: {fileID: 2100000, guid: 870f533e6d3ba4acda06315fae29e135, type: 2}
   width: 120
   height: 120
-  gridSize: 1
+  gridSize: 3
   spacing: 0
   baseWaves:
   - Amplitude: 1

@@ -5,6 +5,9 @@ using UnityEngine;
 public class Draggable : MonoBehaviour
 {
     [SerializeField]
+    GameObject onPlaceEffect;
+    AudioSource source; 
+    [SerializeField]
     bool isDraggable = false; 
     [SerializeField]
     bool movedByWater = false;
@@ -13,36 +16,47 @@ public class Draggable : MonoBehaviour
     [SerializeField]
     float waveDrag = 1; 
     [SerializeField]
-    int foodValue = 1; 
-    [SerializeField]
-    int partyValue = 1; 
-    [SerializeField]
-    int bargeValue = 1;
+    public int foodValue = 1; 
+    public int partyValue = 1;
+    public int bargeValue = 1; 
+    bool isPlaced = false; 
     [SerializeField] 
     float size = 2; 
     public float Size {get{return size;}}
     Collider coll; 
     Rigidbody rigid;
     bool isGrabbed = false; 
-
-    public void GotGrabbed(){
-        Debug.Log("Got grabbed"); 
+    public bool IsGrabbed {get{return isGrabbed;}}
+    public bool CanBeGrabbed{get{return !isGrabbed && !isPlaced;}}
+    public void GotGrabbed(){ 
         rigid.isKinematic = true;
         isGrabbed = true;  
+    }
+    public void GotPlaced(){
+        rigid.isKinematic = true; 
+        isPlaced = true; 
+        if(onPlaceEffect != null){
+            Instantiate(onPlaceEffect, transform.position, Quaternion.identity); 
+        }
+        if(source != null){
+            source.Play(); 
+        }
     }
     public void GotReleased(){
         rigid.isKinematic = false;
         isGrabbed = false;  
     }
-
     void Awake(){
-        coll = GetComponent<Collider>(); 
-        size = coll.bounds.extents.z * 2;
-        rigid = GetComponent<Rigidbody>(); 
+        coll = GetComponent<Collider>();
+        if(size == 0){
+            size = coll.bounds.extents.z * 2;
+        }
+        rigid = GetComponent<Rigidbody>();
+        source = GetComponent<AudioSource>(); 
     }
 
     public void SetPosAndDir(Vector3 pos, Vector3 forward){
-        if(isGrabbed && isDraggable){
+        if(isGrabbed && isDraggable && !isPlaced){
             transform.position = pos; 
             transform.forward = forward; 
         }
