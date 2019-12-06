@@ -56,7 +56,7 @@ public class Boat : MonoBehaviour
         if(Input.GetAxisRaw("Horizontal") != 0 || Input.GetAxisRaw("Vertical") != 0){
             sound.pitch = Mathf.Min(maxPitch, sound.pitch + pitchAcceleration * Time.deltaTime);
         }else{
-            sound.pitch = Mathf.Max(1, sound.pitch - pitchAcceleration); 
+            sound.pitch = Mathf.Max(1, sound.pitch - pitchAcceleration * Time.deltaTime * 2); 
         }
     }
 

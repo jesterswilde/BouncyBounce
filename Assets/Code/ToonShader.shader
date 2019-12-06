@@ -1,8 +1,11 @@
-﻿Shader "Custom/Toon"
+﻿// Upgrade NOTE: replaced '_Object2World' with 'unity_ObjectToWorld'
+
+Shader "Custom/Toon"
 {
 	Properties
 	{
 		_Color("Color", Color) = (1,1,1,1)
+		_HeightColor("Height Color", Color) = (1,1,1,1)
 		_MainTex("Main Texture", 2D) = "white" {}
 		// Ambient light is applied uniformly to all surfaces on the object.
 		[HDR]
@@ -16,7 +19,9 @@
 		_RimAmount("Rim Amount", Range(0, 1)) = 0.716
 		// Control how smoothly the rim blends when approaching unlit
 		// parts of the surface.
-		_RimThreshold("Rim Threshold", Range(0, 1)) = 0.1		
+		_RimThreshold("Rim Threshold", Range(0, 1)) = 0.1
+		_MinColorHeight("Min Height", Range(-5,5)) = 0
+		_MaxColorHeight("Max Height", Range(0,20)) = 5	
 	}
 	SubShader
 	{
@@ -51,7 +56,8 @@
 
 			struct v2f
 			{
-				float4 pos : SV_POSITION;
+				float4 pos: SV_POSITION; 
+				float3 worldPos : TEXCOORD3;
 				float3 worldNormal : NORMAL;
 				float2 uv : TEXCOORD0;
 				float3 viewDir : TEXCOORD1;	
@@ -68,6 +74,7 @@
 			{
 				v2f o;
 				o.pos = UnityObjectToClipPos(v.vertex);
+				o.worldPos = mul (unity_ObjectToWorld, v.vertex).xyz;
 				o.worldNormal = UnityObjectToWorldNormal(v.normal);		
 				o.viewDir = WorldSpaceViewDir(v.vertex);
 				o.uv = TRANSFORM_TEX(v.uv, _MainTex);
@@ -78,7 +85,7 @@
 			}
 			
 			float4 _Color;
-
+			float4 _HeightColor;
 			float4 _AmbientColor;
 
 			float4 _SpecularColor;
@@ -87,6 +94,8 @@
 			float4 _RimColor;
 			float _RimAmount;
 			float _RimThreshold;	
+			float _MinColorHeight; 
+			float _MaxColorHeight; 
 
 			float4 frag (v2f i) : SV_Target
 			{
@@ -129,8 +138,9 @@
 				float4 rim = rimIntensity * _RimColor;
 
 				float4 sample = tex2D(_MainTex, i.uv);
-
-				return (light + _AmbientColor + specular + rim) * _Color * sample;
+				float yPos = (clamp(i.worldPos.y, _MinColorHeight, _MaxColorHeight) - _MinColorHeight) / _MaxColorHeight - _MinColorHeight;
+				float4 color = ((1 - yPos) * _Color) + (yPos * _HeightColor); 
+				return (light + _AmbientColor + specular + rim) * color * sample;
 			}
 			ENDCG
 		}

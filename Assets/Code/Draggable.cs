@@ -16,13 +16,12 @@ public class Draggable : MonoBehaviour
     [SerializeField]
     float waveDrag = 1; 
     [SerializeField]
-    int foodValue = 1; 
-    [SerializeField]
-    int partyValue = 1; 
-    [SerializeField]
-    int bargeValue = 1; 
-    float size; 
+    public int foodValue = 1; 
+    public int partyValue = 1;
+    public int bargeValue = 1; 
     bool isPlaced = false; 
+    [SerializeField] 
+    float size = 2; 
     public float Size {get{return size;}}
     Collider coll; 
     Rigidbody rigid;
