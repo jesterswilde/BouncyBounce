@@ -6,7 +6,11 @@ using System.Linq;
 public class Boat : MonoBehaviour
 {
     [SerializeField]
-    float maxSpeed = 5; 
+    float minBoostThresh = 0.5f;
+    [SerializeField]
+    float waterBoostMult = 15;
+    [SerializeField]
+    float boost = 10; 
     [SerializeField]
     float acceleration = 2; 
     [SerializeField]
@@ -114,8 +118,15 @@ public class Boat : MonoBehaviour
         float forwardY =  GameManager.Water.getHeightAtPointScaled((int)transform.position.x+1, (int)transform.position.z);
         float rightY =  GameManager.Water.getHeightAtPointScaled((int)transform.position.x, (int)transform.position.z+1);
         Vector3 waveNorm = new Vector3(forwardY - posAtPoint, 0, rightY - posAtPoint); 
+        float yUp = GameManager.Water.GetVelocityOfPoint((int)transform.position.x, (int)transform.position.z);
         float yDif = transform.position.y - posAtPoint; 
         Vector3 dir = new Vector3(x, 0, z).normalized * acceleration * Time.deltaTime;
+        if(dir == Vector3.zero && Input.GetKey(KeyCode.Space)){
+            dir.x = rigid.velocity.x; 
+            dir.z = rigid.velocity.z;
+            dir = dir.normalized; 
+            dir*= boost;
+        }
         // Vector3 velForward = transform.forward;
         // velForward.y = 0; 
         // velForward = velForward.normalized; 
@@ -123,6 +134,9 @@ public class Boat : MonoBehaviour
         if(yDif < 0){
             rigid.useGravity = false; 
             y = (1 - (Mathf.Min(1,yDif)/1)) * buoyancy; 
+            if(posAtPoint > minBoostThresh){
+                y+= posAtPoint * waterBoostMult; 
+            }
             // y += GameManager.Water.GetVelocityOfPoint((int)transform.position.x, (int)transform.position.z);
             
             // Debug.Log(" up"); 
@@ -132,6 +146,7 @@ public class Boat : MonoBehaviour
         }
         dir += waveNorm; 
         dir.y = y; 
+        dir.y += yUp; 
         rigid.AddForce(dir, ForceMode.Acceleration);
     }
 

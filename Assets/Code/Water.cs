@@ -171,7 +171,7 @@ public class Water : MonoBehaviour
         float curY = 0;
         float prevY = 0;
         waves.ForEach(wave => curY += wave.WeightAtPoint(x, y, 0));
-        waves.ForEach(wave => prevY += wave.WeightAtPoint(x, y, 0.05f));
+        waves.ForEach(wave => prevY += wave.WeightAtPoint(x, y, -0.05f));
         return curY - prevY; 
     }
     void UpdateArcadeWave(){
