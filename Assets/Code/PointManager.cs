@@ -15,7 +15,7 @@ public class PointManager : MonoBehaviour
 
     void Update(){
         timer.text = "Time: " + Time.time.ToString("0");
-        pointsText.text = "Points: " + points;
+        pointsText.text = "Points = " + points;
     }
 
     public static void AddPoints(int points, string pointType){
