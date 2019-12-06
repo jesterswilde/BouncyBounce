@@ -17,8 +17,9 @@ public class Draggable : MonoBehaviour
     [SerializeField]
     int partyValue = 1; 
     [SerializeField]
-    int bargeValue = 1; 
-    float size; 
+    int bargeValue = 1;
+    [SerializeField] 
+    float size = 2; 
     public float Size {get{return size;}}
     Collider coll; 
     Rigidbody rigid;
