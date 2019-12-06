@@ -1,14 +1,9 @@
 fileFormatVersion: 2
-guid: a7da097f06fbf0c4ba0992687df936c1
+guid: 35b94eed36bad2e478e019c91f40be4e
 ModelImporter:
   serializedVersion: 26
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: ic_cone_mtl
-    second: {fileID: 2100000, guid: 7ee302fe77a0b6e48ae1f8bfb8eeb3df, type: 2}
+  externalObjects: {}
   materials:
     importMaterials: 1
     materialName: 0
