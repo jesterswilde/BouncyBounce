@@ -47,8 +47,10 @@ public class Draggable : MonoBehaviour
         isGrabbed = false;  
     }
     void Awake(){
-        coll = GetComponent<Collider>(); 
-        size = coll.bounds.extents.z * 2;
+        coll = GetComponent<Collider>();
+        if(size == 0){
+            size = coll.bounds.extents.z * 2;
+        }
         rigid = GetComponent<Rigidbody>();
         source = GetComponent<AudioSource>(); 
     }
